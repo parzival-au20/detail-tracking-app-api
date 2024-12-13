@@ -35,10 +35,7 @@ docker-compose up --build
 Wait for the containers to start. The app container will automatically wait for the database to be ready, run migrations, and then start the Django development server.            
 
 The application will be available at http://localhost:8000.            
-
-**API Endpoints**             
-Refer to the earlier sections for a complete list of API endpoints and their functionality.        
-
+      
 **Testing**          
 You can test the API endpoints using tools such as Postman or Swagger.
 
