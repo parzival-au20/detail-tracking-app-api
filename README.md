@@ -5,14 +5,16 @@ Installation
 Prerequisites
 Python 3.x
 Docker (for containerization)
+Docker Compose (for managing multi-container applications)
 PostgreSQL (optional, but recommended)
 Steps to Install
 Clone this repository:
 
 bash
 Copy code
-git clone https://github.com/parzival-au20/detail-tracking-app-api.git
-cd detail-tracking-app-api
+git clone [REPOSITORY_URL]
+cd [PROJECT_NAME]
+(Optional) If you do not have Docker installed, download it from here.
 
 Build and start the application using Docker Compose:
 
@@ -38,7 +40,48 @@ It installs dependencies from requirements.txt and requirements.dev.txt (for dev
 It creates a virtual environment (/py) to isolate dependencies.
 It installs PostgreSQL client and development libraries needed for the application.
 It uses a non-root user django-user to run the application.
+Docker Compose Configuration
+The project includes a docker-compose.yml file to define the services and dependencies:
 
+yaml
+Copy code
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    command: >
+      sh -c "python manage.py wait_for_db &&
+              python manage.py migrate &&
+              python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    ports:
+    - "5432:5432"
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+volumes:
+  dev-db-data:
 Running the Application
 Build and start the containers using Docker Compose:
 
@@ -48,6 +91,9 @@ docker-compose up --build
 Wait for the containers to start. The app container will automatically wait for the database to be ready, run migrations, and then start the Django development server.
 
 The application will be available at http://localhost:8000.
+
+API Endpoints
+Refer to the earlier sections for a complete list of API endpoints and their functionality.
 
 Testing
 You can test the API endpoints using tools such as Postman or Swagger.
