@@ -14,8 +14,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """Manage users in the system."""
     serializer_class = UserSerializer
     queryset = User.objects.all()  # Tüm kullanıcıları sorgula
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         """Override perform_create to handle user creation"""

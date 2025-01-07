@@ -10,11 +10,11 @@ from rest_framework import serializers
 class AlbumSerializer(serializers.ModelSerializer):
     """ Serializer for the album object."""
     # photos = serializers.StringRelatedField(many=True, read_only=True)
-    user_pk = serializers.CharField(source='user.id', read_only=True)
+    # user = serializers.CharField(source='user.id', read_only=True)
 
     class Meta:
         model = Album
-        fields = ['user_pk', 'id', 'title']
+        fields = ['user', 'id', 'title']
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -22,4 +22,4 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Photo
-        fields = ['album_pk', 'id', 'title', 'url', 'thumbnailUrl']
+        fields = ['album', 'id', 'title', 'url', 'thumbnailUrl']

@@ -7,23 +7,18 @@ from todo.serializers import ToDoSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ToDoViewSet(viewsets.ModelViewSet):
     """Manage to-do in the database."""
     queryset = ToDo.objects.all()
     serializer_class = ToDoSerializer
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]  # Sadece giriş yapan kullanıcılar görebilir.
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]  # Sadece giriş yapan kullanıcılar görebilir.
 
-    def get_queryset(self):
-        user_pk = self.kwargs.get('user_pk')
-        try:
-            user = User.objects.get(id=user_pk)  # Kullanıcıyı doğrula
-        except User.DoesNotExist:
-            raise NotFound(detail="A user with the specified user_id was not found.")
-
-        return self.queryset.filter(user_pk=user)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user']
 
     def perform_create(self, serializer):
         """Create a new todo."""

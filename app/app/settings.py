@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(d2*e2_&lppcv*w04li=8(a4*$yfl+4ges%6n7)web9#^m_tap
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_nested',
     'drf_spectacular',
+    "corsheaders",
+    'django_filters',
     'user',
     'post',
     'todo',
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -141,4 +144,9 @@ AUTH_USER_MODEL = 'core.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

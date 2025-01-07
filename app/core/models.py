@@ -83,10 +83,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Post(models.Model):
-    user_pk = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # Kullanıcı modeliyle ilişki
         on_delete=models.CASCADE,
-        related_name='posts'
+        related_name='posts',
     )
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -97,8 +97,8 @@ class Post(models.Model):
 
 # Comment Model
 class Comment(models.Model):
-    post_pk = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
-    user_pk = models.ForeignKey(
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(
         'User',
         null=True,
         blank=True,
@@ -108,21 +108,21 @@ class Comment(models.Model):
     body = models.TextField()
 
     def __str__(self):
-        return f"Comment on {self.post_pk.title}"
+        return f"Comment on {self.post.title}"
 
     @property
     def name(self):
         """Get the name of the user who commented."""
-        return self.user_pk.name if self.user_pk else None
+        return self.user.name if self.user else None
 
     @property
     def email(self):
         """Get the email of the user who commented."""
-        return self.user_pk.email if self.user_pk else None
+        return self.user.email if self.user else None
 
 
 class Album(models.Model):
-    user_pk = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # Kullanıcı modeliyle ilişki
         on_delete=models.CASCADE,
         related_name='albums'
@@ -134,20 +134,18 @@ class Album(models.Model):
 
 
 class Photo(models.Model):
-    album_pk = models.ForeignKey(Album, related_name="photos", on_delete=models.CASCADE)
-    user_pk = models.ForeignKey(
+    album = models.ForeignKey(Album, related_name="photos", on_delete=models.CASCADE)
+    user = models.ForeignKey(
         'User',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='user_photos',
     )
     title = models.CharField(max_length=255)
-    url = models.URLField()
-    thumbnailUrl = models.URLField()
+    url = models.URLField(max_length=500)
+    thumbnailUrl = models.URLField(max_length=500)
 
     def __str__(self):
-        return f"Album on {self.album_pk.title}"
+        return f"Album on {self.album.title}"
 
     @property
     def email(self):
@@ -156,7 +154,7 @@ class Photo(models.Model):
 
 
 class ToDo(models.Model):
-    user_pk = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # Kullanıcı modeliyle ilişki
         on_delete=models.CASCADE,
         related_name='todo'

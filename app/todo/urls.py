@@ -2,20 +2,15 @@
 URL mappings for to-do API
 """
 
-
-from rest_framework.routers import SimpleRouter
-from rest_framework_nested.routers import NestedSimpleRouter
+from rest_framework.routers import DefaultRouter
 from todo.views import ToDoViewSet
 
 app_name = 'todo'
 
 
-# Main router
-router = SimpleRouter()
-router.register(r'users', ToDoViewSet, basename='users')
+router = DefaultRouter()
+router.register('todos', ToDoViewSet)
 
-# Nested router for posts
-todos_router = NestedSimpleRouter(router, r'users', lookup='user')
-todos_router.register(r'todos', ToDoViewSet, basename='user-todos')
-
-urlpatterns = router.urls + todos_router.urls
+urlpatterns = [
+    # Diğer URL'ler
+] + router.urls
